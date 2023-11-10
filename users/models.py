@@ -14,6 +14,13 @@ class User(AbstractUser):
     token = models.CharField(max_length=100, default=create_token(), verbose_name='token')
     email_verify = models.BooleanField(default=False, verbose_name='верификация почты')
 
+    def __str__(self):
+        return f'{self.email}'
+
+    class Meta:
+        verbose_name = 'пользователь'
+        verbose_name_plural = 'пользователи'
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
