@@ -25,10 +25,21 @@
                             <tr>
                                 <td>{{ object.name }}</td>
                                 <td>{{ object.periodic }}</td>
-                                <td>{{ object.name }}</td>
+                                <td>{{ object.massage }}</td>
                                 <td>{{ object.start }}</td>
                                 <td>{{ object.status }}</td>
-                                <td>{{ object.name }}</td>
+                                <td>
+                                    <a
+                                            class="p-2 btn btn-outline-primary"
+                                            href="{% url 'service:update_mailing' object.pk %}">
+                                            Редактировать
+                                    </a>
+                                    <a
+                                            class="p-2 btn btn-outline-primary"
+                                            href="{% url 'service:delete_mailing' object.pk %}">
+                                            Удалить
+                                    </a>
+                                </td>
                             </tr>
                         {% endfor %}
                     </table>

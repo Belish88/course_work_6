@@ -37,9 +37,9 @@ class Mailing(models.Model):
     start = models.DateField(default=now, verbose_name='начало')
     stop = models.DateField(**NULLABLE, verbose_name='окончание')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=CREATED, verbose_name='статус')
-    clients = models.ManyToManyField(Client, verbose_name='клиенты')
+    clients = models.ManyToManyField(Client, **NULLABLE, verbose_name='клиенты')
     author = models.ForeignKey('users.User', **NULLABLE, on_delete=models.CASCADE, verbose_name='автор')
-    is_active = models.BooleanField(default=True, verbose_name='активна')
+    is_active = models.BooleanField(default=False, verbose_name='активна')
 
     def __str__(self):
         return f'{self.name}'
