@@ -11,7 +11,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, verbose_name='почта')
     first_name = models.CharField(max_length=50, **NULLABLE, verbose_name='фамилия')
     last_name = models.CharField(max_length=50, **NULLABLE, verbose_name='имя')
-    token = models.CharField(max_length=100, default=create_token(), verbose_name='token')
+    token = models.CharField(max_length=100, default='token', verbose_name='token')
     email_verify = models.BooleanField(default=False, verbose_name='верификация почты')
 
     def __str__(self):
