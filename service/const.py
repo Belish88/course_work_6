@@ -1,3 +1,11 @@
+from datetime import datetime, timedelta
+
+from django.utils.timezone import localtime
+
+START = localtime().now()
+STOP = localtime().now() + timedelta(days=1)
+
+
 MINUTE = 1
 HORSE = 60
 DAY = HORSE * 24
@@ -17,12 +25,13 @@ PERIODIC_CHOICES = [
 CREATED = 'CR'
 LAUNCHED = 'LA'
 COMPLETED = 'CP'
-PAUSED = 'PA'
+READY = 'RY'
+NO_ACTIVE = 'NA'
 
 STATUS_CHOICES = [
     (CREATED, 'Создание'),
     (LAUNCHED, 'Запущена'),
     (COMPLETED, 'Завершина'),
-    (PAUSED, 'Пауза'),
+    (READY, 'Ждет отправки'),
+    (NO_ACTIVE, 'Не активна'),
 ]
-

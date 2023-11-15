@@ -7,7 +7,7 @@ class MailingForm(forms.ModelForm):
 
     class Meta:
         model = Mailing
-        fields = ('name', 'periodic', 'massage', 'start', 'status', 'is_active')
+        fields = ('name', 'periodic', 'massage', 'start', 'stop', 'clients')
 
 
 class MassageForm(forms.ModelForm):
@@ -21,4 +21,4 @@ class ClientForm(forms.ModelForm):
 
     class Meta:
         model = Client
-        fields = ('email',)
+        fields = ('email', 'name', 'comment')

@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
 
-from service.const import PERIODIC_CHOICES, DAY, STATUS_CHOICES, CREATED
+from service.const import PERIODIC_CHOICES, DAY, STATUS_CHOICES, STOP, NO_ACTIVE, START
 from users.models import NULLABLE
 
 
@@ -34,15 +34,15 @@ class Mailing(models.Model):
     name = models.CharField(max_length=100, verbose_name='название')
     massage = models.ForeignKey(Massage, **NULLABLE, on_delete=models.CASCADE, verbose_name='сообщение')
     periodic = models.IntegerField(choices=PERIODIC_CHOICES, default=DAY, verbose_name='периодичность')
-    start = models.DateField(default=now, verbose_name='начало')
-    stop = models.DateField(**NULLABLE, verbose_name='окончание')
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=CREATED, verbose_name='статус')
+    start = models.DateTimeField(default=now, verbose_name='начало')
+    stop = models.DateTimeField(default=STOP, verbose_name='окончание')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=NO_ACTIVE, verbose_name='статус')
     clients = models.ManyToManyField(Client, **NULLABLE, verbose_name='клиенты')
     author = models.ForeignKey('users.User', **NULLABLE, on_delete=models.CASCADE, verbose_name='автор')
     is_active = models.BooleanField(default=False, verbose_name='активна')
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.name} {self.start}'
 
     class Meta:
         verbose_name = 'рассылка'
@@ -50,7 +50,7 @@ class Mailing(models.Model):
 
 
 class Log(models.Model):
-    name = models.ForeignKey(Mailing, on_delete=models.CASCADE, verbose_name='название')
+    name = models.CharField(max_length=100, verbose_name='название')
     time_attempt = models.DateField(default=now, verbose_name='время последней попытки')
     status = models.BooleanField(default=False, verbose_name='статус')
     mode = models.CharField(max_length=10, verbose_name='режим')

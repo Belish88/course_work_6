@@ -19,7 +19,7 @@ class MassageAdmin(admin.ModelAdmin):
 
 @admin.register(Mailing)
 class MailingAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'periodic', 'status', 'author', 'is_active')
+    list_display = ('pk', 'name', 'massage', 'periodic', 'status', 'author', 'is_active')
     list_filter = ('is_active', 'periodic', 'status')
     search_fields = ('name', 'author')
 
