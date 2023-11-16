@@ -5,8 +5,7 @@
     {% if user.is_authenticated %}
         <a class="btn btn-primary" href="{% url 'service:create_mailing' %}">Создать рассылку</a>
         <a class="btn btn-primary" href="{% url 'service:create_massage' %}">Создать сообщение</a>
-        <a class="btn btn-primary" href="{% url 'service:create_client' %}">Создать Клиента</a>
-        <a class="btn btn-primary" href="{% url 'service:automatic_mailing' %}">Включить автоматьческую рассылку</a>
+<!--        <a class="btn btn-primary" href="{% url 'service:automatic_mailing' %}">Включить автоматьческую рассылку</a>-->
     {% endif %}
     <div class="row">
         <div class="col-12">
@@ -26,7 +25,12 @@
                         </tr>
                         {% for object in object_list %}
                             <tr>
-                                <td>{{ object.name }}</td>
+                                <td>
+                                    <a
+                                            href="{% url 'service:mailing_view' object.pk %}">
+                                            {{ object.name }}
+                                    </a>
+                                </td>
                                 <td>{{ object.get_periodic_display }}</td>
                                 <td>{{ object.massage }}</td>
                                 <td>{{ object.start }}</td>

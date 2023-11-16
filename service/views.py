@@ -8,7 +8,7 @@ from django.core.management import BaseCommand
 from django.core.serializers import python
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 
 from service.const import CREATED, NO_ACTIVE, START
 from service.forms import MailingForm, ClientForm, MassageForm
@@ -25,6 +25,25 @@ class MailingListView(ListView):
         queryset = super().get_queryset()
         job_rady_check()
         return queryset
+
+
+class MailingDetailView(DetailView):
+    model = Mailing
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(id=self.kwargs.get('pk'))
+        return queryset
+
+
+class ClientDetailView(DetailView):
+    model = Client
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(id=self.kwargs.get('pk'))
+        return queryset
+
 
 
 class LogListView(ListView):
@@ -58,9 +77,21 @@ class MailingUpdateView(UpdateView):
     success_url = reverse_lazy('service:mailing')
 
 
+class ClientUpdateView(UpdateView):
+    model = Mailing
+    fields = ('email', 'name', 'comment')
+    success_url = reverse_lazy('service:client')
+
+
 class MailingDeleteView(DeleteView):
     model = Mailing
     success_url = reverse_lazy('service:mailing')
+
+
+class ClientDeleteView(DeleteView):
+    model = Client
+    success_url = reverse_lazy('service:client')
+
 
 
 class MassageCreateView(CreateView):

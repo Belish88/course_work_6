@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from django.utils.timezone import now
 
@@ -34,10 +36,10 @@ class Mailing(models.Model):
     name = models.CharField(max_length=100, verbose_name='название')
     massage = models.ForeignKey(Massage, **NULLABLE, on_delete=models.CASCADE, verbose_name='сообщение')
     periodic = models.IntegerField(choices=PERIODIC_CHOICES, default=DAY, verbose_name='периодичность')
-    start = models.DateTimeField(default=START, verbose_name='начало')
-    stop = models.DateTimeField(default=STOP, verbose_name='окончание')
+    start = models.DateTimeField(default=datetime.now, verbose_name='начало')
+    stop = models.DateTimeField(default=datetime.now, verbose_name='окончание')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=NO_ACTIVE, verbose_name='статус')
-    clients = models.ManyToManyField(Client, **NULLABLE, verbose_name='клиенты')
+    clients = models.ManyToManyField(Client, blank=True, verbose_name='клиенты')
     author = models.ForeignKey('users.User', **NULLABLE, on_delete=models.CASCADE, verbose_name='автор')
     is_active = models.BooleanField(default=False, verbose_name='активна')
 

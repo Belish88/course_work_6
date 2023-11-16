@@ -17,12 +17,30 @@
                             <th>Имя</th>
                             <th>Почта</th>
                             <th>Комментарий</th>
+                            <th>Управление</th>
                         </tr>
                         {% for object in object_list %}
                             <tr>
-                                <td>{{ object.name }}</td>
+                                <td>
+                                    <a
+                                            href="{% url 'service:client_view' object.pk %}">
+                                            {{ object.name }}
+                                    </a>
+                                </td>
                                 <td>{{ object.email }}</td>
                                 <td>{{ object.comment }}</td>
+                                <td>
+                                    <a
+                                            class="p-2 btn btn-outline-primary"
+                                            href="{% url 'service:update_client' object.pk %}">
+                                            Редактировать
+                                    </a>
+                                    <a
+                                            class="p-2 btn btn-outline-primary"
+                                            href="{% url 'service:delete_client' object.pk %}">
+                                            Удалить
+                                    </a>
+                                </td>
                             </tr>
                         {% endfor %}
                     </table>
