@@ -1,6 +1,8 @@
+from datetime import datetime
+
 from django.utils.timezone import localtime
 
 
 def start():
-    result = localtime().now()
+    result = datetime.now()
     return result

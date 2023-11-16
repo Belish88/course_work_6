@@ -2,7 +2,9 @@ from datetime import datetime, timedelta
 
 from django.utils.timezone import localtime
 
-START = localtime().now()
+from service.utils import start
+
+START = start()
 STOP = localtime().now() + timedelta(days=1)
 
 

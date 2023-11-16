@@ -34,7 +34,7 @@ class Mailing(models.Model):
     name = models.CharField(max_length=100, verbose_name='название')
     massage = models.ForeignKey(Massage, **NULLABLE, on_delete=models.CASCADE, verbose_name='сообщение')
     periodic = models.IntegerField(choices=PERIODIC_CHOICES, default=DAY, verbose_name='периодичность')
-    start = models.DateTimeField(default=now, verbose_name='начало')
+    start = models.DateTimeField(default=START, verbose_name='начало')
     stop = models.DateTimeField(default=STOP, verbose_name='окончание')
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=NO_ACTIVE, verbose_name='статус')
     clients = models.ManyToManyField(Client, **NULLABLE, verbose_name='клиенты')
@@ -51,10 +51,10 @@ class Mailing(models.Model):
 
 class Log(models.Model):
     name = models.CharField(max_length=100, verbose_name='название')
-    time_attempt = models.DateField(default=now, verbose_name='время последней попытки')
-    status = models.BooleanField(default=False, verbose_name='статус')
+    time_attempt = models.DateTimeField(default=now, verbose_name='время последней попытки')
+    status = models.CharField(max_length=100, verbose_name='статус')
     mode = models.CharField(max_length=10, verbose_name='режим')
-    mail_server_response = models.CharField(max_length=100, verbose_name='ответ почтового сервера')
+    mail_server_response = models.CharField(max_length=100, **NULLABLE, verbose_name='ответ почтового сервера')
 
     def __str__(self):
         return f'{self.name}'

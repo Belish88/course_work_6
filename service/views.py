@@ -1,5 +1,6 @@
 import os
-from datetime import timedelta
+import smtplib
+from datetime import timedelta, datetime
 
 from django.conf import settings
 from django.core.mail import send_mail
@@ -18,7 +19,7 @@ from service.models import Mailing, Log, Client, Massage
 
 class MailingListView(ListView):
     model = Mailing
-    ordering = ['-is_active', 'start']
+    ordering = ['is_active', '-status', 'start']
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -28,6 +29,7 @@ class MailingListView(ListView):
 
 class LogListView(ListView):
     model = Log
+    ordering = ['-time_attempt']
 
 
 class ClientListView(ListView):
@@ -91,15 +93,30 @@ def automatic_mailing(request):
 
 
 def start_mailing(request, pk):
+    log = Log()
     mail = Mailing.objects.get(pk=pk)
     mail.start = START + timedelta(minutes=mail.periodic)
     mailing_clients = mail.clients.all()
     for client in mailing_clients:
-        send_mail(
-            subject=mail.massage.title,
-            message=mail.massage.text,
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[client.email]
-        )
+        try:
+            send_mail(
+                subject=mail.massage.title,
+                message=mail.massage.text,
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[client.email]
+            )
+        except smtplib.SMTPAuthenticationError:
+            print('Ошибка smtplib.SMTPAuthenticationError:')
+            log.mail_server_response = 'Ошибка smtplib.SMTPAuthenticationError:'
+
+        log.name = mail.name
+        log.time_attempt = datetime.now()
+        if log.mail_server_response:
+            log.status = 'Не отправлено'
+        else:
+            log.status = 'Отправлено'
+            log.mail_server_response = ''
+        log.mode = 'Ручной'
     mail.save()
+    log.save()
     return redirect(reverse('service:mailing'))

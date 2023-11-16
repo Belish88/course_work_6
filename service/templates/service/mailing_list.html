@@ -61,6 +61,12 @@
                                             href="{% url 'service:start_mailing' object.pk %}">
                                             Старт
                                     </a>
+                                    {% else %}
+                                    <a
+                                            class="p-2 btn btn-outline-secondary"
+                                            href="{% url 'service:mailing' %}">
+                                            Старт
+                                    </a>
                                     {% endif %}
                                 </td>
                             </tr>
