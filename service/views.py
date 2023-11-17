@@ -26,6 +26,8 @@ class MailingListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        if not self.request.user.is_staff:
+            queryset = queryset.filter(author=self.request.user)
         job_rady_check()
         return queryset
 
@@ -56,6 +58,13 @@ class LogListView(LoginRequiredMixin, ListView):
 class ClientListView(LoginRequiredMixin, ListView):
     model = Client
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if not self.request.user.is_staff:
+            queryset = queryset.filter(author=self.request.user)
+        job_rady_check()
+        return queryset
+
 
 class MailingCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Mailing
@@ -82,7 +91,7 @@ class MailingUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
 
 
 class ClientUpdateView(LoginRequiredMixin, UpdateView):
-    model = Mailing
+    model = Client
     fields = ('email', 'name', 'comment')
     success_url = reverse_lazy('service:client')
 
@@ -98,7 +107,6 @@ class ClientDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('service:client')
 
 
-
 class MassageCreateView(LoginRequiredMixin, CreateView):
     model = Massage
     form_class = MassageForm
@@ -109,6 +117,12 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
     model = Client
     form_class = ClientForm
     success_url = reverse_lazy('service:client')
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.author = self.request.user
+        self.object.save()
+        return super().form_valid(form)
 
 
 @login_required
