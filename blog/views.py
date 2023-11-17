@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView
@@ -5,27 +6,31 @@ from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 from blog.models import Blog
 
 
-class BlogCreateView(CreateView):
+class BlogCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Blog
+    permission_required = 'blog.add_blog'
     fields = ('title', 'text', 'img', 'activate')
     success_url = reverse_lazy('blog:blog_list')
 
 
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Blog
+    permission_required = 'blog.change_blog'
     fields = ('title', 'text', 'img', 'activate')
 
     def get_success_url(self):
         return reverse('blog:blog', args=[self.kwargs.get('pk')])
 
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Blog
+    permission_required = 'blog.delete_blog'
     success_url = reverse_lazy('blog:blog_list')
 
 
-class BlogListView(ListView):
+class BlogListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Blog
+    permission_required = 'blog.view_blog'
     extra_context = {
         'title': 'Блог',
     }
@@ -36,8 +41,9 @@ class BlogListView(ListView):
         return queryset
 
 
-class BlogDetailView(DetailView):
+class BlogDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = Blog
+    permission_required = 'blog.view_blog'
 
     def get_queryset(self):
         queryset = super().get_queryset()

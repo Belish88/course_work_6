@@ -32,8 +32,9 @@ class MailingListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         return queryset
 
 
-class MailingDetailView(LoginRequiredMixin, DetailView):
+class MailingDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = Mailing
+    permission_required = 'service.view_mailing'
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -41,8 +42,9 @@ class MailingDetailView(LoginRequiredMixin, DetailView):
         return queryset
 
 
-class ClientDetailView(LoginRequiredMixin, DetailView):
+class ClientDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = Client
+    permission_required = 'service.view_client'
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -50,13 +52,15 @@ class ClientDetailView(LoginRequiredMixin, DetailView):
         return queryset
 
 
-class LogListView(LoginRequiredMixin, ListView):
+class LogListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Log
     ordering = ['-time_attempt']
+    permission_required = 'service.view_log'
 
 
-class ClientListView(LoginRequiredMixin, ListView):
+class ClientListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Client
+    permission_required = 'service.view_client'
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -90,32 +94,36 @@ class MailingUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
     success_url = reverse_lazy('service:mailing')
 
 
-class ClientUpdateView(LoginRequiredMixin, UpdateView):
+class ClientUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Client
     fields = ('email', 'name', 'comment')
+    permission_required = 'service.change_client'
     success_url = reverse_lazy('service:client')
 
 
-class MailingDeleteView(LoginRequiredMixin, PermissionRequiredMixin,  DeleteView):
+class MailingDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Mailing
     success_url = reverse_lazy('service:mailing')
     permission_required = 'service.delete_mailing'
 
 
-class ClientDeleteView(LoginRequiredMixin, DeleteView):
+class ClientDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Client
+    permission_required = 'service.delete_client'
     success_url = reverse_lazy('service:client')
 
 
-class MassageCreateView(LoginRequiredMixin, CreateView):
+class MassageCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Massage
     form_class = MassageForm
+    permission_required = 'service.add_massage'
     success_url = reverse_lazy('service:create_mailing')
 
 
-class ClientCreateView(LoginRequiredMixin, CreateView):
+class ClientCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Client
     form_class = ClientForm
+    permission_required = 'service.add_client'
     success_url = reverse_lazy('service:client')
 
     def form_valid(self, form):

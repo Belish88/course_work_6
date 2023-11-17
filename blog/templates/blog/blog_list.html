@@ -2,7 +2,9 @@
 {% load my_tags %}
 {% block content %}
     <div class="col-12 mb-5">
-        <a class="btn btn-outline-primary" href="{% url 'blog:create_blog' %}">Создать</a>
+        {% if perms.blog.add_blog %}
+            <a class="btn btn-outline-primary" href="{% url 'blog:create_blog' %}">Создать</a>
+        {% endif %}
     </div>
     <div class="row text-center">
         {% for object in object_list %}
@@ -15,8 +17,12 @@
                         <img src="{% mymedia_tag object.img %}" width="100">
                         <div>
                             <a class="p-2 btn btn-outline-primary" href="{% url 'blog:blog' object.pk %}">Просмотр</a>
-                            <a class="p-2 btn btn-outline-primary" href="{% url 'blog:update_blog' object.pk %}">Редактировать</a>
-                            <a class="p-2 btn btn-outline-primary" href="{% url 'blog:delete_blog' object.pk %}">Удалить</a>
+                            {% if perms.blog.change_blog %}
+                                <a class="p-2 btn btn-outline-primary" href="{% url 'blog:update_blog' object.pk %}">Редактировать</a>
+                            {% endif %}
+                            {% if perms.blog.delete_blog %}
+                                <a class="p-2 btn btn-outline-primary" href="{% url 'blog:delete_blog' object.pk %}">Удалить</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

@@ -21,8 +21,12 @@
                 </div>
             </div>
             <div>
-                <a class="p-2 btn btn-outline-primary" href="{% url 'blog:update_blog' object.pk %}">Редактировать</a>
-                <a class="p-2 btn btn-outline-primary" href="{% url 'blog:delete_blog' object.pk %}">Удалить</a>
+                {% if perms.blog.change_blog %}
+                    <a class="p-2 btn btn-outline-primary" href="{% url 'blog:update_blog' object.pk %}">Редактировать</a>
+                {% endif %}
+                {% if perms.blog.delete_blog %}
+                    <a class="p-2 btn btn-outline-primary" href="{% url 'blog:delete_blog' object.pk %}">Удалить</a>
+                {% endif %}
             </div>
         </div>
     </div>
