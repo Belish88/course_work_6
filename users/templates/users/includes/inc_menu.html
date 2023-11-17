@@ -4,7 +4,7 @@
         <a class="p-2 btn btn-outline-primary" href="{% url 'service:mailing' %}">Рассылки</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'service:client' %}">Клиенты</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'service:log' %}">Отчёт</a>
-        <a class="p-2 btn btn-outline-primary" href="//">Блог</a>
+        <a class="p-2 btn btn-outline-primary" href="{% url 'blog:blog_list' %}">Блог</a>
         {% if perms.users.view_user %}
             <a class="p-2 btn btn-outline-primary" href="{% url 'users:users_list' %}">Пользователи</a>
         {% endif %}
