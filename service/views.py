@@ -3,6 +3,8 @@ import smtplib
 from datetime import timedelta, datetime
 
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.core.management import BaseCommand
 from django.core.serializers import python
@@ -17,7 +19,7 @@ from service.management.commands.mailing import Command
 from service.models import Mailing, Log, Client, Massage
 
 
-class MailingListView(ListView):
+class MailingListView(LoginRequiredMixin, ListView):
     model = Mailing
     ordering = ['is_active', '-status', 'start']
 
@@ -27,7 +29,7 @@ class MailingListView(ListView):
         return queryset
 
 
-class MailingDetailView(DetailView):
+class MailingDetailView(LoginRequiredMixin, DetailView):
     model = Mailing
 
     def get_queryset(self):
@@ -36,7 +38,7 @@ class MailingDetailView(DetailView):
         return queryset
 
 
-class ClientDetailView(DetailView):
+class ClientDetailView(LoginRequiredMixin, DetailView):
     model = Client
 
     def get_queryset(self):
@@ -45,17 +47,16 @@ class ClientDetailView(DetailView):
         return queryset
 
 
-
-class LogListView(ListView):
+class LogListView(LoginRequiredMixin, ListView):
     model = Log
     ordering = ['-time_attempt']
 
 
-class ClientListView(ListView):
+class ClientListView(LoginRequiredMixin, ListView):
     model = Client
 
 
-class MailingCreateView(CreateView):
+class MailingCreateView(LoginRequiredMixin, CreateView):
     model = Mailing
     form_class = MailingForm
     success_url = reverse_lazy('service:mailing')
@@ -71,41 +72,42 @@ class MailingCreateView(CreateView):
         return super().form_valid(form)
 
 
-class MailingUpdateView(UpdateView):
+class MailingUpdateView(LoginRequiredMixin, UpdateView):
     model = Mailing
     fields = ('name', 'periodic', 'massage', 'start', 'stop', 'clients')
     success_url = reverse_lazy('service:mailing')
 
 
-class ClientUpdateView(UpdateView):
+class ClientUpdateView(LoginRequiredMixin, UpdateView):
     model = Mailing
     fields = ('email', 'name', 'comment')
     success_url = reverse_lazy('service:client')
 
 
-class MailingDeleteView(DeleteView):
+class MailingDeleteView(LoginRequiredMixin, DeleteView):
     model = Mailing
     success_url = reverse_lazy('service:mailing')
 
 
-class ClientDeleteView(DeleteView):
+class ClientDeleteView(LoginRequiredMixin, DeleteView):
     model = Client
     success_url = reverse_lazy('service:client')
 
 
 
-class MassageCreateView(CreateView):
+class MassageCreateView(LoginRequiredMixin, CreateView):
     model = Massage
     form_class = MassageForm
     success_url = reverse_lazy('service:create_mailing')
 
 
-class ClientCreateView(CreateView):
+class ClientCreateView(LoginRequiredMixin, CreateView):
     model = Client
     form_class = ClientForm
     success_url = reverse_lazy('service:client')
 
 
+@login_required
 def activate_mailing(request, pk):
     mailing = get_object_or_404(Mailing, pk=pk)
     if mailing.is_active:
@@ -118,11 +120,13 @@ def activate_mailing(request, pk):
     return redirect(reverse('service:mailing'))
 
 
+@login_required
 def automatic_mailing(request):
     # os.system('cd service/management/commands/mailing.py')
     return redirect(reverse('service:mailing'))
 
 
+@login_required
 def start_mailing(request, pk):
     log = Log()
     mail = Mailing.objects.get(pk=pk)
