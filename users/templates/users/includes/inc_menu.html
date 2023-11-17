@@ -5,7 +5,9 @@
         <a class="p-2 btn btn-outline-primary" href="{% url 'service:client' %}">Клиенты</a>
         <a class="p-2 btn btn-outline-primary" href="{% url 'service:log' %}">Отчёт</a>
         <a class="p-2 btn btn-outline-primary" href="//">Блог</a>
-        <a class="p-2 btn btn-outline-primary" href="{% url 'users:users_list' %}">Пользователи</a>
+        {% if perms.users.view_user %}
+            <a class="p-2 btn btn-outline-primary" href="{% url 'users:users_list' %}">Пользователи</a>
+        {% endif %}
         <a class="p-2 btn btn-outline-primary" href="{% url 'users:logout' %}">Выйти</a>
     {% else %}
         <a class="p-2 btn btn-outline-primary" href="{% url 'users:login' %}">Войти</a>

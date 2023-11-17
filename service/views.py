@@ -3,8 +3,8 @@ import smtplib
 from datetime import timedelta, datetime
 
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.mail import send_mail
 from django.core.management import BaseCommand
 from django.core.serializers import python
@@ -19,9 +19,10 @@ from service.management.commands.mailing import Command
 from service.models import Mailing, Log, Client, Massage
 
 
-class MailingListView(LoginRequiredMixin, ListView):
+class MailingListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Mailing
     ordering = ['is_active', '-status', 'start']
+    permission_required = 'service.view_mailing'
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -56,9 +57,10 @@ class ClientListView(LoginRequiredMixin, ListView):
     model = Client
 
 
-class MailingCreateView(LoginRequiredMixin, CreateView):
+class MailingCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Mailing
     form_class = MailingForm
+    permission_required = 'service.add_mailing'
     success_url = reverse_lazy('service:mailing')
 
     def get_context_data(self, **kwargs):
@@ -72,9 +74,10 @@ class MailingCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class MailingUpdateView(LoginRequiredMixin, UpdateView):
+class MailingUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Mailing
     fields = ('name', 'periodic', 'massage', 'start', 'stop', 'clients')
+    permission_required = 'service.change_mailing'
     success_url = reverse_lazy('service:mailing')
 
 
@@ -84,9 +87,10 @@ class ClientUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('service:client')
 
 
-class MailingDeleteView(LoginRequiredMixin, DeleteView):
+class MailingDeleteView(LoginRequiredMixin, PermissionRequiredMixin,  DeleteView):
     model = Mailing
     success_url = reverse_lazy('service:mailing')
+    permission_required = 'service.delete_mailing'
 
 
 class ClientDeleteView(LoginRequiredMixin, DeleteView):
@@ -127,6 +131,7 @@ def automatic_mailing(request):
 
 
 @login_required
+@permission_required('service.set_start_mailing')
 def start_mailing(request, pk):
     log = Log()
     mail = Mailing.objects.get(pk=pk)

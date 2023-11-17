@@ -49,6 +49,10 @@ class Mailing(models.Model):
     class Meta:
         verbose_name = 'рассылка'
         verbose_name_plural = 'рассылки'
+        permissions = [
+            ('set_start_mailing', 'Can start mailing')
+        ]
+
 
 
 class Log(models.Model):

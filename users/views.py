@@ -1,6 +1,6 @@
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
@@ -15,11 +15,13 @@ def main(request):
     return render(request, 'users/main.html')
 
 
-class UserListView(ListView):
+class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = User
+    permission_required = 'users.view_user'
 
 
 @login_required
+@permission_required('users.set_is_active')
 def users_active(request, pk):
     user = get_object_or_404(User, pk=pk)
     if user.is_active:
@@ -28,8 +30,6 @@ def users_active(request, pk):
         user.is_active = True
     user.save()
     return redirect(reverse('users:users_list'))
-
-
 
 
 class RegisterView(CreateView):
@@ -49,7 +49,6 @@ class RegisterView(CreateView):
         return super().form_valid(form)
 
 
-@login_required
 def activate(request, token):
     user = User.objects.get(token=token)
     user.email_verify = True

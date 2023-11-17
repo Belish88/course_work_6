@@ -20,6 +20,16 @@ class User(AbstractUser):
     class Meta:
         verbose_name = 'пользователь'
         verbose_name_plural = 'пользователи'
+        permissions = [
+            (
+                'set_email_verify',
+                'Can email verify'
+            ),
+            (
+                'set_is_active',
+                'Can is active'
+            )
+        ]
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

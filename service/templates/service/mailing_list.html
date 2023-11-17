@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="col-12 mb-5">
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and perms.service.add_mailing %}
         <a class="btn btn-primary" href="{% url 'service:create_mailing' %}">Создать рассылку</a>
         <a class="btn btn-primary" href="{% url 'service:create_massage' %}">Создать сообщение</a>
 <!--        <a class="btn btn-primary" href="{% url 'service:automatic_mailing' %}">Включить автоматьческую рассылку</a>-->
@@ -36,16 +36,20 @@
                                 <td>{{ object.start }}</td>
                                 <td>{{ object.get_status_display }}</td>
                                 <td>
+                                    {% if perms.service.change_mailing %}
                                     <a
                                             class="p-2 btn btn-outline-primary"
                                             href="{% url 'service:update_mailing' object.pk %}">
                                             Редактировать
                                     </a>
+                                    {% endif %}
+                                    {% if perms.service.delete_mailing %}
                                     <a
                                             class="p-2 btn btn-outline-primary"
                                             href="{% url 'service:delete_mailing' object.pk %}">
                                             Удалить
                                     </a>
+                                    {% endif %}
                                     {% if object.is_active%}
                                     <a
                                             class="p-2 btn btn-outline-danger"
@@ -59,18 +63,21 @@
                                             Вкл
                                     </a>
                                     {% endif %}
-                                    {% if object.status == 'RY' %}
-                                    <a
-                                            class="p-2 btn btn-outline-success"
-                                            href="{% url 'service:start_mailing' object.pk %}">
-                                            Старт
-                                    </a>
-                                    {% else %}
-                                    <a
-                                            class="p-2 btn btn-outline-secondary"
-                                            href="{% url 'service:mailing' %}">
-                                            Старт
-                                    </a>
+                                    {% csrf_token %}
+                                    {% if perms.service.set_start_mailing %}
+                                        {% if object.status == 'RY' %}
+                                        <a
+                                                class="p-2 btn btn-outline-success"
+                                                href="{% url 'service:start_mailing' object.pk %}">
+                                                Старт
+                                        </a>
+                                        {% else %}
+                                        <a
+                                                class="p-2 btn btn-outline-secondary"
+                                                href="{% url 'service:mailing' %}">
+                                                Старт
+                                        </a>
+                                        {% endif %}
                                     {% endif %}
                                 </td>
                             </tr>
