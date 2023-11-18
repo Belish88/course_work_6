@@ -3,21 +3,13 @@
 
         <a class="p-2 btn btn-outline-primary" href="{% url 'users:main' %}">Главная</a>
 
-        {% if perms.service.view_mailing %}
-            <a class="p-2 btn btn-outline-primary" href="{% url 'service:mailing' %}">Рассылки</a>
-        {% endif %}
+        <a class="p-2 btn btn-outline-primary" href="{% url 'service:mailing' %}">Рассылки</a>
 
-        {% if perms.service.view_client %}
-            <a class="p-2 btn btn-outline-primary" href="{% url 'service:client' %}">Клиенты</a>
-        {% endif %}
+        <a class="p-2 btn btn-outline-primary" href="{% url 'service:client' %}">Клиенты</a>
 
-        {% if perms.service.view_log %}
-            <a class="p-2 btn btn-outline-primary" href="{% url 'service:log' %}">Отчёт</a>
-        {% endif %}
+        <a class="p-2 btn btn-outline-primary" href="{% url 'service:log' %}">Отчёт</a>
 
-        {% if perms.blog.view_blog %}
-            <a class="p-2 btn btn-outline-primary" href="{% url 'blog:blog_list' %}">Блог</a>
-        {% endif %}
+        <a class="p-2 btn btn-outline-primary" href="{% url 'blog:blog_list' %}">Блог</a>
 
         {% if perms.users.view_user %}
             <a class="p-2 btn btn-outline-primary" href="{% url 'users:users_list' %}">Пользователи</a>

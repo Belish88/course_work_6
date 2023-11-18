@@ -51,7 +51,8 @@ class Mailing(models.Model):
         verbose_name = 'рассылка'
         verbose_name_plural = 'рассылки'
         permissions = [
-            ('set_start_mailing', 'Can start mailing')
+            ('set_start_mailing', 'Can start mailing'),
+            ('set_activat_mailing', 'Can activate mailing')
         ]
 
 

@@ -28,9 +28,8 @@ class BlogDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('blog:blog_list')
 
 
-class BlogListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+class BlogListView(LoginRequiredMixin, ListView):
     model = Blog
-    permission_required = 'blog.view_blog'
     extra_context = {
         'title': 'Блог',
     }
@@ -41,9 +40,8 @@ class BlogListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         return queryset
 
 
-class BlogDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+class BlogDetailView(LoginRequiredMixin, DetailView):
     model = Blog
-    permission_required = 'blog.view_blog'
 
     def get_queryset(self):
         queryset = super().get_queryset()
