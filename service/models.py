@@ -45,7 +45,7 @@ class Mailing(models.Model):
     is_active = models.BooleanField(default=False, verbose_name='активна')
 
     def __str__(self):
-        return f'{self.name} {self.start}'
+        return f'{self.name}'
 
     class Meta:
         verbose_name = 'рассылка'

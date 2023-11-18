@@ -1,3 +1,5 @@
+import random
+
 from django.conf import settings
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -6,13 +8,39 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, ListView
 
+from blog.models import Blog
+from service.models import Mailing, Client
 from users.forms import UserRegisterForm
 from users.models import User
+from users.utils import create_token
 
 
 @login_required
+@permission_required('blog.view_blog')
 def main(request):
-    return render(request, 'users/main.html')
+    mailing_count = Mailing.objects.count()
+    mailing_active_count = Mailing.objects.filter(is_active=True).count()
+    client_count = Client.objects.count()
+    blog_all = Blog.objects.all()
+    blog_random_post = []
+    end = True
+    while end:
+        if blog_all:
+            post = random.choice(blog_all)
+            if post not in blog_random_post:
+                blog_random_post.append(post)
+                blog_all = blog_all.exclude(pk=post.pk)
+        else:
+            end = False
+
+    blog_random_post = blog_random_post[:3]
+    context = {
+        'mailing_count': mailing_count,
+        'mailing_active_count': mailing_active_count,
+        'client_count': client_count,
+        'blog_random_post': blog_random_post
+    }
+    return render(request, 'users/main.html', context)
 
 
 class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -40,6 +68,7 @@ class RegisterView(CreateView):
 
     def form_valid(self, form):
         new_user = form.save()
+        new_user.token = create_token()
         send_mail(
             subject='Подтвердите почту',
             message=f'Пройдите по ссылке http://127.0.0.1:8000/activate/{new_user.token}',
@@ -54,4 +83,6 @@ def activate(request, token):
     user.email_verify = True
     user.save()
     return render(request, 'users/activate.html')
+
+
 

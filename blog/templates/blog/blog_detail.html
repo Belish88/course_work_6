@@ -21,6 +21,7 @@
                 </div>
             </div>
             <div>
+                Дата публикации: {{ object.date_begin }}
                 {% if perms.blog.change_blog %}
                     <a class="p-2 btn btn-outline-primary" href="{% url 'blog:update_blog' object.pk %}">Редактировать</a>
                 {% endif %}
