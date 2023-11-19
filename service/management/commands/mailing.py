@@ -28,10 +28,6 @@ class Command(BaseCommand):
             "Added weekly job: 'delete_old_job_executions'."
         )
 
-        logger.info(
-            "Added weekly job: 'delete_old_job_executions'."
-        )
-
         try:
             logger.info("Starting scheduler...")
             scheduler.start()

@@ -1,17 +1,18 @@
+import logging
 import smtplib
 from datetime import timedelta, datetime
 
 from django.conf import settings
-from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 
-from service.const import CREATED, NO_ACTIVE, START
+from service.const import CREATED, NO_ACTIVE
 from service.forms import MailingForm, ClientForm, MassageForm
-from service.jobs import job_rady_check
+from service.jobs import start
 from service.models import Mailing, Log, Client, Massage
 
 
@@ -32,7 +33,6 @@ class MailingListView(LoginRequiredMixin, ListView):
         queryset = super().get_queryset()
         if not self.request.user.is_staff:
             queryset = queryset.filter(author=self.request.user)
-        job_rady_check()
         return queryset
 
 
@@ -160,8 +160,8 @@ def activate_mailing(request, pk):
 
 
 @login_required
-def automatic_mailing(request):
-    # os.system('cd service/management/commands/mailing.py')
+def automatic_mailing_start(request):
+    start()
     return redirect(reverse('service:mailing'))
 
 
@@ -169,7 +169,7 @@ def automatic_mailing(request):
 def start_mailing(request, pk):
     log = Log()
     mail = Mailing.objects.get(pk=pk)
-    mail.start = START + timedelta(minutes=mail.periodic)
+    mail.start = datetime.now() + timedelta(minutes=mail.periodic)
     mailing_clients = mail.clients.all()
     for client in mailing_clients:
         try:

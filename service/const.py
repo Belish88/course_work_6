@@ -1,12 +1,3 @@
-from datetime import datetime, timedelta
-
-from django.utils.timezone import localtime
-
-from service.utils import start
-
-START = start()
-STOP = localtime().now() + timedelta(days=1)
-
 
 MINUTE = 1
 HORSE = 60

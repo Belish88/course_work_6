@@ -9,6 +9,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, ListView
 
 from blog.models import Blog
+from service.jobs import start
 from service.models import Mailing, Client
 from users.forms import UserRegisterForm
 from users.models import User
@@ -16,8 +17,8 @@ from users.utils import create_token
 
 
 @login_required
-# @permission_required('blog.view_blog')
 def main(request):
+    start()
     mailing_count = Mailing.objects.count()
     mailing_active_count = Mailing.objects.filter(is_active=True).count()
     client_count = Client.objects.count()

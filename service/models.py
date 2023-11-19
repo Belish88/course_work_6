@@ -60,7 +60,7 @@ class Log(models.Model):
     name = models.CharField(max_length=100, verbose_name='название')
     time_attempt = models.DateTimeField(default=now, verbose_name='время последней попытки')
     status = models.CharField(max_length=100, verbose_name='статус')
-    mode = models.CharField(max_length=10, verbose_name='режим')
+    mode = models.CharField(max_length=100, verbose_name='режим')
     mail_server_response = models.CharField(max_length=100, **NULLABLE, verbose_name='ответ почтового сервера')
 
     def __str__(self):
