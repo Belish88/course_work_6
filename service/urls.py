@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.decorators.cache import cache_page
 
 from service.apps import ServiceConfig
 from service.views import MailingListView, MailingCreateView, LogListView, ClientListView, ClientCreateView, \
@@ -10,7 +11,7 @@ app_name = ServiceConfig.name
 
 urlpatterns = [
     path('mailing/', MailingListView.as_view(), name='mailing'),
-    path('client/', ClientListView.as_view(), name='client'),
+    path('client/', cache_page(60)(ClientListView.as_view()), name='client'),
     path('create_mailing/', MailingCreateView.as_view(), name='create_mailing'),
     path('update_mailing/<int:pk>/', MailingUpdateView.as_view(), name='update_mailing'),
     path('update_client/<int:pk>/', ClientUpdateView.as_view(), name='update_client'),

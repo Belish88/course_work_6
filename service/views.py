@@ -99,12 +99,6 @@ class MailingUpdateView(LoginRequiredMixin, UserHasPermissionMixin, PermissionRe
     permission_required = 'service.change_mailing'
     success_url = reverse_lazy('service:mailing')
 
-    # def get_form_kwargs(self):
-    #     kwargs = super(MailingUpdateView, self).get_form_kwargs()
-    #     kwargs.update({'user': self.request.user})
-    #     # Добавляем в форму аргумент содержащий текущего пользователя
-    #     return kwargs
-
 
 class ClientUpdateView(LoginRequiredMixin, UserHasPermissionMixin, PermissionRequiredMixin, UpdateView):
     model = Client

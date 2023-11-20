@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
+from django.views.decorators.cache import cache_page
 from django.views.generic import CreateView, ListView
 
 from blog.models import Blog
@@ -17,6 +18,7 @@ from users.utils import create_token
 
 
 @login_required
+@cache_page(60)
 def main(request):
     start()
     mailing_count = Mailing.objects.count()
