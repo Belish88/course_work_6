@@ -18,7 +18,7 @@ from users.utils import create_token
 
 
 @login_required
-# @cache_page(60)
+@cache_page(60)
 def main(request):
     start()
     mailing_count = Mailing.objects.count()
